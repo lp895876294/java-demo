@@ -2,7 +2,6 @@ package com.demo.api;
 
 import com.demo.dto.ClientApp;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -17,7 +16,7 @@ public interface ClientAppApi {
      * @param name 单个派发渠道
      * @return
      */
-    @PostMapping(value = "/list")
+    @RequestMapping(value = "/list")
     List<ClientApp> queryApp(@RequestParam(name = "name") String name) ;
 
 }

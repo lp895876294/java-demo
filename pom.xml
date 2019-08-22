@@ -22,7 +22,8 @@
     </properties>
 
 	<modules>
-        <module>feign-rest-client</module>
+        <module>feign-client-spring</module>
+        <module>feign-client-source</module>
         <module>feign-client-sdk</module>
         <module>feign-client-sdk-impl</module>
     </modules>
