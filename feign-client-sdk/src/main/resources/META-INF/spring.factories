@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.fosung.cloud.platform.rest.client.config.AppCloudPlatformClientAutoConfiguration

@@ -1,0 +1,26 @@
+spring:
+  redis:
+    database: '1'
+    host: 10.254.66.1
+    port: '6379'
+app:
+  dao:
+    dataSource:
+      driverClass: org.postgresql.Driver
+      password: fosung1234
+      url: jdbc:postgresql://10.254.66.1:5432/cloud-platform-test?useUnicode=true&characterEncoding=utf-8
+      username: postgres
+    jpa:
+      dialect: com.fosung.framework.dao.dialect.PostgreSQL9DialectWithoutFK
+      schema: public
+  secure:
+    auth:
+      urlAuths:
+        -
+          url: /**
+          filter: anon
+    referer:
+      enable: false
+    xss:
+      enable: false
+
