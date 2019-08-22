@@ -18,14 +18,13 @@
 
     <properties>
         <framework.version>0.7-SNAPSHOT</framework.version>
-        <cloud.version>1.0-SNAPSHOT</cloud.version>
-        <!--云平台-->
-        <docker.image.prefix>cloud</docker.image.prefix>
+        <demo.version>1.0-SNAPSHOT</demo.version>
     </properties>
 
 	<modules>
         <module>feign-rest-client</module>
         <module>feign-client-sdk</module>
+        <module>feign-client-sdk-impl</module>
     </modules>
 
     <repositories>

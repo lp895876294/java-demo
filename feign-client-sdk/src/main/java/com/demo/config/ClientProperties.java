@@ -1,14 +1,14 @@
-package com.fosung.cloud.platform.rest.client.config;
+package com.demo.config;
 
 
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-@ConfigurationProperties(prefix = "app.cloud.client")
+@ConfigurationProperties(prefix = "app.client")
 @Setter
 @Getter
-public class AppCloudPlatformClientProperties {
+public class ClientProperties {
 
     public String url ;
 

@@ -1,4 +1,4 @@
-package com.fosung.cloud.platform.rest.client.config;
+package com.demo.config;
 
 
 import lombok.extern.slf4j.Slf4j;
@@ -10,10 +10,10 @@ import org.springframework.core.annotation.Order;
 
 @Slf4j
 @Configuration
-@EnableConfigurationProperties({AppCloudPlatformClientProperties.class})
+@EnableConfigurationProperties({ClientProperties.class})
 @Order(Ordered.HIGHEST_PRECEDENCE)
-@ComponentScan(basePackages = "com.fosung.cloud.platform.rest.client.api")
-public class AppCloudPlatformClientAutoConfiguration {
+@ComponentScan(basePackages = "com.demo.api")
+public class ClientAutoConfiguration {
 
 
 

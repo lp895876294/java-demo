@@ -1,11 +1,11 @@
-package com.fosung.cloud.platform.rest.client.dto;
+package com.demo.dto;
 
 import lombok.Data;
 
 import java.io.Serializable;
 
 @Data
-public class CloudApp implements Serializable {
+public class ClientApp implements Serializable {
 
     private static final long serialVersionUID = 1L ;
 
@@ -14,10 +14,4 @@ public class CloudApp implements Serializable {
 
     // 终端名称
     private String name ;
-
-    // 终端编码
-    private String code ;
-
-    // 终端图标
-    private String icon ;
 }

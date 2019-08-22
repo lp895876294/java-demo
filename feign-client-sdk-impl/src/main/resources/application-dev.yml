@@ -1,11 +1,12 @@
+server:
+  port: 8081
+
 spring:
   redis:
     database: 1
     host: localhost
     port: 6379
 app:
-  client:
-    url: http://localhost:8081
   dao:
     dataSource:
       driverClass: org.postgresql.Driver

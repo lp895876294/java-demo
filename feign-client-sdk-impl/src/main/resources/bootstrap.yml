@@ -2,7 +2,7 @@ spring:
   profiles:
     active: ${SPRING_CONFIG_PROFILE:dev}
   application:
-    name: ${SPRING_APPLICATION_NAME:client_rest_client}
+    name: ${SPRING_APPLICATION_NAME:client_sdk_impl}
   cloud:
     config:
       label: ${SPRING_CONFIG_LABEL:master}
