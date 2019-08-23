@@ -26,6 +26,8 @@
         <module>feign-client-source</module>
         <module>feign-client-sdk</module>
         <module>feign-client-sdk-impl</module>
+        <module>hystrix-demo</module>
+        <module>hystrix-core</module>
     </modules>
 
     <repositories>

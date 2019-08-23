@@ -9,6 +9,7 @@ import feign.jackson.JacksonDecoder;
 public class ClientSourceApplication {
 
     public static void main(String[] args) {
+
         ClientSourceAppApi clientSourceAppApi = Feign.builder()
                 .encoder(new FormEncoder())
                 .decoder( new JacksonDecoder())
