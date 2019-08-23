@@ -12,23 +12,12 @@
 
     <artifactId>hystrix-core</artifactId>
 
-    <properties>
-        <feign.version>10.3.0</feign.version>
-        <feign-form.version>3.8.0</feign-form.version>
-    </properties>
-
     <dependencies>
 
         <dependency>
             <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
             <version>1.2</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.netflix.hystrix</groupId>
-            <artifactId>hystrix-core</artifactId>
-            <version>1.5.18</version>
         </dependency>
 
         <dependency>

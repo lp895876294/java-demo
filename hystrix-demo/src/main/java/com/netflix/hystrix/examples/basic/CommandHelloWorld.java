@@ -49,7 +49,7 @@ public class CommandHelloWorld extends HystrixCommand<String> {
 
         @Test
         public void testSynchronous() {
-            assertEquals("Hello World!", new CommandHelloWorld("World").execute());
+            System.out.println( new CommandHelloWorld("World").execute() );
             assertEquals("Hello Bob!", new CommandHelloWorld("Bob").execute());
         }
 

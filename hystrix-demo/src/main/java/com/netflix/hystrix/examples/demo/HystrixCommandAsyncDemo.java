@@ -67,16 +67,16 @@ public class HystrixCommandAsyncDemo {
     }
 
     public HystrixCommandAsyncDemo() {
-        /*
-         * Instead of using injected properties we'll set them via Archaius
-         * so the rest of the code behaves as it would in a real system
-         * where it picks up properties externally provided.
-         */
-        ConfigurationManager.getConfigInstance().setProperty("hystrix.threadpool.default.coreSize", 8);
-        ConfigurationManager.getConfigInstance().setProperty("hystrix.command.CreditCardCommand.execution.isolation.thread.timeoutInMilliseconds", 3000);
-        ConfigurationManager.getConfigInstance().setProperty("hystrix.command.GetUserAccountCommand.execution.isolation.thread.timeoutInMilliseconds", 50);
-        // set the rolling percentile more granular so we see data change every second rather than every 10 seconds as is the default 
-        ConfigurationManager.getConfigInstance().setProperty("hystrix.command.default.metrics.rollingPercentile.numBuckets", 60);
+//        /*
+//         * Instead of using injected properties we'll set them via Archaius
+//         * so the rest of the code behaves as it would in a real system
+//         * where it picks up properties externally provided.
+//         */
+//        ConfigurationManager.getConfigInstance().setProperty("hystrix.threadpool.default.coreSize", 8);
+//        ConfigurationManager.getConfigInstance().setProperty("hystrix.command.CreditCardCommand.execution.isolation.thread.timeoutInMilliseconds", 3000);
+//        ConfigurationManager.getConfigInstance().setProperty("hystrix.command.GetUserAccountCommand.execution.isolation.thread.timeoutInMilliseconds", 50);
+//        // set the rolling percentile more granular so we see data change every second rather than every 10 seconds as is the default
+//        ConfigurationManager.getConfigInstance().setProperty("hystrix.command.default.metrics.rollingPercentile.numBuckets", 60);
 
         RxJavaPlugins.getInstance().registerSchedulersHook(new ContextAwareRxSchedulersHook());
     }
