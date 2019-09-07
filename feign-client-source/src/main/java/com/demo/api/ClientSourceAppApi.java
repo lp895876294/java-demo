@@ -2,6 +2,7 @@ package com.demo.api;
 
 import feign.*;
 
+import java.net.URI;
 import java.util.Map;
 
 public interface ClientSourceAppApi {
@@ -11,10 +12,10 @@ public interface ClientSourceAppApi {
     Object queryApp(@Param("name") String name);
 
     @RequestLine("GET {uri}")
-    String executeGetRequest(@Param("uri") String uri , @QueryMap Map<String,Object> queryParam , @HeaderMap Map<String,String> headerMap) ;
+    String executeGetRequest(URI host , @Param("uri") String uri , @QueryMap Map<String,Object> queryParam , @HeaderMap Map<String,String> headerMap) ;
 
     @RequestLine("POST {uri}")
-    String executePostRequest(@Param("uri") String uri , @QueryMap Map<String,Object> queryParam , @HeaderMap Map<String,String> headerMap) ;
+    String executePostRequest(URI host , @Param("uri") String uri , @QueryMap Map<String,Object> queryParam , @HeaderMap Map<String,String> headerMap) ;
 
 
 }
