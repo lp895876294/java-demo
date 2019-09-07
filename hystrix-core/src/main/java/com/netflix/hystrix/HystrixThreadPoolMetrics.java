@@ -33,9 +33,8 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.atomic.AtomicInteger;
-
 /**
- * Used by {@link HystrixThreadPool} to record metrics.
+ * 线程池的监控指标获取对象
  */
 public class HystrixThreadPoolMetrics extends HystrixMetrics {
 

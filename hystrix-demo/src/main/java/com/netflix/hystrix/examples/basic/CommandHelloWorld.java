@@ -17,12 +17,14 @@ package com.netflix.hystrix.examples.basic;
 
 import static org.junit.Assert.*;
 
+import java.io.IOException;
 import java.util.concurrent.Future;
 
 import org.junit.Test;
 
 import rx.Observable;
 import rx.Observer;
+import rx.Subscriber;
 import rx.functions.Action1;
 
 import com.netflix.hystrix.HystrixCommand;
@@ -48,9 +50,36 @@ public class CommandHelloWorld extends HystrixCommand<String> {
     public static class UnitTest {
 
         @Test
-        public void testSynchronous() {
-            System.out.println( new CommandHelloWorld("World").execute() );
-            assertEquals("Hello Bob!", new CommandHelloWorld("Bob").execute());
+        public void testSynchronous() throws Exception {
+            CommandHelloWorld commandHelloWorld = new CommandHelloWorld("World") ;
+
+            commandHelloWorld.execute() ;
+
+            Observable<String> observable = commandHelloWorld.toObservable() ;
+
+            System.out.println( observable.toBlocking().toFuture().get() ) ;
+
+//            observable.subscribe(new Subscriber<String>() {
+//                @Override
+//                public void onCompleted() {
+//                    System.out.println( "complete1" );
+//                }
+//
+//                @Override
+//                public void onError(Throwable e) {
+//                    System.out.println( "onError1" );
+//                }
+//
+//                @Override
+//                public void onNext(String s) {
+//                    System.out.println( "onNext1->" + s);
+//                }
+//            }) ;
+
+            System.in.read() ;
+
+//            commandHelloWorld.execute() ;
+//            System.out.println( commandHelloWorld.execute() );
         }
 
         @Test

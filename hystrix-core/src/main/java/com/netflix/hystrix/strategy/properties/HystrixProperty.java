@@ -26,6 +26,11 @@ import com.netflix.hystrix.strategy.properties.HystrixPropertiesChainedArchaiusP
  * @param <T>
  *            Type of property value
  */
+
+/**
+ * hystrix属性配置类，通用的属性配置类
+ * @param <T>
+ */
 public interface HystrixProperty<T> {
 
     public T get();
@@ -33,7 +38,10 @@ public interface HystrixProperty<T> {
     /**
      * Helper methods for wrapping static values and dynamic Archaius (https://github.com/Netflix/archaius) properties in the {@link HystrixProperty} interface.
      */
-    public static class Factory {
+    /**
+     * hystrix属性的转换类，将多种不同类型的对象转换成hystrix的属性
+     */
+    class Factory {
 
         public static <T> HystrixProperty<T> asProperty(final T value) {
             return new HystrixProperty<T>() {

@@ -92,14 +92,20 @@ public abstract class HystrixConcurrencyStrategy {
     }
 
     public ThreadPoolExecutor getThreadPool(final HystrixThreadPoolKey threadPoolKey, HystrixThreadPoolProperties threadPoolProperties) {
+        // 线程工厂
         final ThreadFactory threadFactory = getThreadFactory(threadPoolKey);
-
+        // 是否允许使用核心线程数覆盖一般线程
         final boolean allowMaximumSizeToDivergeFromCoreSize = threadPoolProperties.getAllowMaximumSizeToDivergeFromCoreSize().get();
+        // 核心线程数
         final int dynamicCoreSize = threadPoolProperties.coreSize().get();
+        // 超出核心线程数的线程的最大存活时间
         final int keepAliveTime = threadPoolProperties.keepAliveTimeMinutes().get();
+        // 最大队列大小
         final int maxQueueSize = threadPoolProperties.maxQueueSize().get();
+        // 创建阻塞队列
         final BlockingQueue<Runnable> workQueue = getBlockingQueue(maxQueueSize);
 
+        // 创建线程池
         if (allowMaximumSizeToDivergeFromCoreSize) {
             final int dynamicMaximumSize = threadPoolProperties.maximumSize().get();
             if (dynamicCoreSize > dynamicMaximumSize) {

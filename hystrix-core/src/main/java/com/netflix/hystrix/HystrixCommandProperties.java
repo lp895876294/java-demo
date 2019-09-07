@@ -39,13 +39,15 @@ public abstract class HystrixCommandProperties {
     private static final Logger logger = LoggerFactory.getLogger(HystrixCommandProperties.class);
 
     /* defaults */
-    /* package */ static final Integer default_metricsRollingStatisticalWindow = 10000;// default => statisticalWindow: 10000 = 10 seconds (and default of 10 buckets so each bucket is 1 second)
+    /* package */
+    static final Integer default_metricsRollingStatisticalWindow = 10000;// default => statisticalWindow: 10000 = 10 seconds (and default of 10 buckets so each bucket is 1 second)
     private static final Integer default_metricsRollingStatisticalWindowBuckets = 10;// default => statisticalWindowBuckets: 10 = 10 buckets in a 10 second window so each bucket is 1 second
     private static final Integer default_circuitBreakerRequestVolumeThreshold = 20;// default => statisticalWindowVolumeThreshold: 20 requests in 10 seconds must occur before statistics matter
     private static final Integer default_circuitBreakerSleepWindowInMilliseconds = 5000;// default => sleepWindow: 5000 = 5 seconds that we will sleep before trying again after tripping the circuit
     private static final Integer default_circuitBreakerErrorThresholdPercentage = 50;// default => errorThresholdPercentage = 50 = if 50%+ of requests in 10 seconds are failures or latent then we will trip the circuit
     private static final Boolean default_circuitBreakerForceOpen = false;// default => forceCircuitOpen = false (we want to allow traffic)
-    /* package */ static final Boolean default_circuitBreakerForceClosed = false;// default => ignoreErrors = false 
+    /* package */
+    static final Boolean default_circuitBreakerForceClosed = false;// default => ignoreErrors = false
     private static final Integer default_executionTimeoutInMilliseconds = 1000; // default => executionTimeoutInMilliseconds: 1000 = 1 second
     private static final Boolean default_executionTimeoutEnabled = true;
     private static final ExecutionIsolationStrategy default_executionIsolationStrategy = ExecutionIsolationStrategy.THREAD;
@@ -96,6 +98,9 @@ public abstract class HystrixCommandProperties {
      * <li>THREAD: Execute the {@link HystrixCommand#run()} method on a separate thread and restrict concurrent executions using the thread-pool size.</li>
      * <li>SEMAPHORE: Execute the {@link HystrixCommand#run()} method on the calling thread and restrict concurrent executions using the semaphore permit count.</li>
      * </ul>
+     */
+    /**
+     * hystrix并发执行的任务的隔离方式
      */
     public static enum ExecutionIsolationStrategy {
         THREAD, SEMAPHORE
@@ -664,51 +669,61 @@ public abstract class HystrixCommandProperties {
             return requestLogEnabled;
         }
 
+        // 是否打开断路器
         public Setter withCircuitBreakerEnabled(boolean value) {
             this.circuitBreakerEnabled = value;
             return this;
         }
 
+        // 断路器错误率阈值
         public Setter withCircuitBreakerErrorThresholdPercentage(int value) {
             this.circuitBreakerErrorThresholdPercentage = value;
             return this;
         }
 
+        // 断路器是否强制关闭
         public Setter withCircuitBreakerForceClosed(boolean value) {
             this.circuitBreakerForceClosed = value;
             return this;
         }
 
+        // 断路器是否强制打开
         public Setter withCircuitBreakerForceOpen(boolean value) {
             this.circuitBreakerForceOpen = value;
             return this;
         }
 
+        // 断路器请求容量阈值，请求数量超过当前阈值后进行出错比例的计算
         public Setter withCircuitBreakerRequestVolumeThreshold(int value) {
             this.circuitBreakerRequestVolumeThreshold = value;
             return this;
         }
 
+        // 断路器睡眠时间
         public Setter withCircuitBreakerSleepWindowInMilliseconds(int value) {
             this.circuitBreakerSleepWindowInMilliseconds = value;
             return this;
         }
 
+        // 信号量机制的最大并发请求数
         public Setter withExecutionIsolationSemaphoreMaxConcurrentRequests(int value) {
             this.executionIsolationSemaphoreMaxConcurrentRequests = value;
             return this;
         }
 
+        // 执行隔离策略
         public Setter withExecutionIsolationStrategy(ExecutionIsolationStrategy value) {
             this.executionIsolationStrategy = value;
             return this;
         }
 
+        // 线程执行时间超过超时时间时，是否中断线程
         public Setter withExecutionIsolationThreadInterruptOnTimeout(boolean value) {
             this.executionIsolationThreadInterruptOnTimeout = value;
             return this;
         }
 
+        // 通过Future对象执行cancel后，是否同步取消执行的线程
         public Setter withExecutionIsolationThreadInterruptOnFutureCancel(boolean value) {
             this.executionIsolationThreadInterruptOnFutureCancel = value;
             return this;
@@ -723,31 +738,37 @@ public abstract class HystrixCommandProperties {
             return this;
         }
 
+        // 执行的有效时间，单位毫秒
         public Setter withExecutionTimeoutInMilliseconds(int value) {
             this.executionTimeoutInMilliseconds = value;
             return this;
         }
 
+        // 执行超时
         public Setter withExecutionTimeoutEnabled(boolean value) {
             this.executionTimeoutEnabled = value;
             return this;
         }
 
+        // 信号量隔离的最大并发请求量
         public Setter withFallbackIsolationSemaphoreMaxConcurrentRequests(int value) {
             this.fallbackIsolationSemaphoreMaxConcurrentRequests = value;
             return this;
         }
 
+        // 是否执行回调
         public Setter withFallbackEnabled(boolean value) {
             this.fallbackEnabled = value;
             return this;
         }
 
+        // 健康检查报告发送时间间隔的毫秒数
         public Setter withMetricsHealthSnapshotIntervalInMilliseconds(int value) {
             this.metricsHealthSnapshotIntervalInMilliseconds = value;
             return this;
         }
 
+        // todo 对于健康检查指标的检查属性需要进一步完善
         public Setter withMetricsRollingPercentileBucketSize(int value) {
             this.metricsRollingPercentileBucketSize = value;
             return this;
@@ -778,11 +799,13 @@ public abstract class HystrixCommandProperties {
             return this;
         }
 
+        // 是否允许请求缓存
         public Setter withRequestCacheEnabled(boolean value) {
             this.requestCacheEnabled = value;
             return this;
         }
 
+        // 是否允许请求日志
         public Setter withRequestLogEnabled(boolean value) {
             this.requestLogEnabled = value;
             return this;

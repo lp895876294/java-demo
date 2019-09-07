@@ -68,10 +68,12 @@ import java.util.concurrent.atomic.AtomicReference;
         NOT_EXECUTED, COMPLETED, TIMED_OUT
     }
 
+    // 命令状态，未开始、观察链创建、用户代码执行、取消订阅、终结
     protected enum CommandState {
         NOT_STARTED, OBSERVABLE_CHAIN_CREATED, USER_CODE_EXECUTED, UNSUBSCRIBED, TERMINAL
     }
 
+    // 线程状态；未使用线程、开始、取消、终结
     protected enum ThreadState {
         NOT_USING_THREAD, STARTED, UNSUBSCRIBED, TERMINAL
     }
@@ -159,12 +161,19 @@ import java.util.concurrent.atomic.AtomicReference;
             HystrixCommandMetrics metrics, TryableSemaphore fallbackSemaphore, TryableSemaphore executionSemaphore,
             HystrixPropertiesStrategy propertiesStrategy, HystrixCommandExecutionHook executionHook) {
 
+        // 以group名初始化当前命令组
         this.commandGroup = initGroupKey(group);
+        // 以当前类名初始化当前命令的Key
         this.commandKey = initCommandKey(key, getClass());
+        // 初始hystrix命令属性，命令前缀格式为： hystrix.类名.具体配置属性
         this.properties = initCommandProperties(this.commandKey, propertiesStrategy, commandPropertiesDefaults);
+        // 线程池的名称，默认使用commandGroup
         this.threadPoolKey = initThreadPoolKey(threadPoolKey, this.commandGroup, this.properties.executionIsolationThreadPoolKeyOverride().get());
+
         this.metrics = initMetrics(metrics, this.commandGroup, this.threadPoolKey, this.commandKey, this.properties);
         this.circuitBreaker = initCircuitBreaker(this.properties.circuitBreakerEnabled().get(), circuitBreaker, this.commandGroup, this.commandKey, this.properties, this.metrics);
+
+        // 构建线程池
         this.threadPool = initThreadPool(threadPool, this.threadPoolKey, threadPoolPropertiesDefaults);
 
         //Strategies from plugins
@@ -366,6 +375,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
         //doOnCompleted handler already did all of the SUCCESS work
         //doOnError handler already did all of the FAILURE/TIMEOUT/REJECTION/BAD_REQUEST work
+        // 结束命令，执行清理
         final Action0 terminateCommandCleanup = new Action0() {
 
             @Override

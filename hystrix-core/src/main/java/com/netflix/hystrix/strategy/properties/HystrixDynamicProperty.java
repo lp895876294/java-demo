@@ -26,6 +26,12 @@ package com.netflix.hystrix.strategy.properties;
  * @see HystrixProperty
  * @see HystrixDynamicProperties
  */
+
+/**
+ * hystrix动态属性配置，在原有属性配置的基础上，新加属性名称的接口。
+ * todo 添加了一个回调接口，可利用此机制实现属性值的动态获取。
+ * @param <T>
+ */
 public interface HystrixDynamicProperty<T> extends HystrixProperty<T>{
     
     public String getName();

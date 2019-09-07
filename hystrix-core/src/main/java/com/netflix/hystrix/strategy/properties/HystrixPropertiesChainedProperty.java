@@ -148,9 +148,12 @@ public abstract class HystrixPropertiesChainedProperty {
         public HystrixDynamicProperty<T> build() {
             if (properties.size() < 1) throw new IllegalArgumentException();
             if (properties.size() == 1) return properties.get(0);
+            // 转换为list存储
             List<HystrixDynamicProperty<T>> reversed = 
                     new ArrayList<HystrixDynamicProperty<T>>(properties);
+            // 逆序，default属性位置靠前
             Collections.reverse(reversed);
+            // 遍历列表，构建属性链，default属性值位置靠后排列
             ChainProperty<T> current = null;
             for (HystrixDynamicProperty<T> p : reversed) {
                 if (current == null) {
@@ -215,7 +218,13 @@ public abstract class HystrixPropertiesChainedProperty {
         }
         
     }
-    
+
+    /**
+     * 链式属性配置，调用父类的get方法
+     * @Author : liupeng
+     * @Date : 2019-08-25
+     * @Modified By
+     */
     private static class ChainProperty<T> extends ChainLink<T> {
 
         private final HystrixDynamicProperty<T> sProp;

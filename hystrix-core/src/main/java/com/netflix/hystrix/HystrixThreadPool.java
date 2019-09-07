@@ -171,11 +171,14 @@ public interface HystrixThreadPool {
         public HystrixThreadPoolDefault(HystrixThreadPoolKey threadPoolKey, HystrixThreadPoolProperties.Setter propertiesDefaults) {
             this.properties = HystrixPropertiesFactory.getThreadPoolProperties(threadPoolKey, propertiesDefaults);
             HystrixConcurrencyStrategy concurrencyStrategy = HystrixPlugins.getInstance().getConcurrencyStrategy();
+            // 线程池等待队列大小
             this.queueSize = properties.maxQueueSize().get();
 
+            // 创建线程池的运行时监控指标
             this.metrics = HystrixThreadPoolMetrics.getInstance(threadPoolKey,
                     concurrencyStrategy.getThreadPool(threadPoolKey, properties),
                     properties);
+
             this.threadPool = this.metrics.getThreadPool();
             this.queue = this.threadPool.getQueue();
 
