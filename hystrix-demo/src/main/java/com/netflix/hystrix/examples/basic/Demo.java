@@ -18,9 +18,11 @@ package com.netflix.hystrix.examples.basic;
 import org.junit.Test;
 import rx.Observable;
 
+import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 public class Demo {
 
@@ -48,6 +50,43 @@ public class Demo {
 
         System.in.read() ;
 
+    }
+
+    @Test
+    public void testInterval() throws IOException {
+
+        Observable<TimeTest> observable = Observable.interval( 1 , TimeUnit.SECONDS )
+                .map((time)->{
+                    TimeTest timeTest = new TimeTest() ;
+                    timeTest.index = System.currentTimeMillis()/1000 ;
+                    return timeTest ;
+                })
+                .doOnSubscribe(()->{
+                    System.out.println("==============doOnSubscribe");
+                }) ;
+//                .doOnNext((item)->{
+//                    System.out.println("doOnNext=============="+ item.index );
+//                })
+
+        observable
+                .subscribe((item)->{
+                    System.out.println(Thread.currentThread().getName()+" , subscribe1==============" + item.index +" , "+ item );
+                }) ;
+        observable
+                .subscribe((item)->{
+                    System.out.println(Thread.currentThread().getName()+" , subscribe2==============" + item.index +" , "+ item  );
+                    try {
+                        Thread.currentThread().sleep(5000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }) ;
+
+        System.in.read() ;
+    }
+
+    class TimeTest {
+        public long index ;
     }
 
 }
