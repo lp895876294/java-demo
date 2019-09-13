@@ -15,13 +15,13 @@
  */
 package com.netflix.hystrix;
 
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.concurrent.atomic.AtomicReference;
-
 import com.netflix.hystrix.HystrixCommandMetrics.HealthCounts;
 import rx.Subscriber;
 import rx.Subscription;
+
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Circuit-breaker logic that is hooked into {@link HystrixCommand} execution and will stop allowing executions if failures have gone past the defined threshold.
@@ -248,6 +248,7 @@ public interface HystrixCircuitBreaker {
                 if (status.get().equals(Status.HALF_OPEN)) {
                     return false;
                 } else {
+                    // 是否超出等待时间
                     return isAfterSleepWindow();
                 }
             }
@@ -271,6 +272,7 @@ public interface HystrixCircuitBreaker {
             if (circuitOpened.get() == -1) {
                 return true;
             } else {
+                // 超过等待时间后，尝试执行一次，变更当前状态为半打开状态
                 if (isAfterSleepWindow()) {
                     //only the first request after sleep window should execute
                     //if the executing command succeeds, the status will transition to CLOSED

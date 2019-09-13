@@ -167,17 +167,19 @@ import java.util.concurrent.atomic.AtomicReference;
         this.commandKey = initCommandKey(key, getClass());
         // 初始hystrix命令属性，命令前缀格式为： hystrix.类名.具体配置属性
         this.properties = initCommandProperties(this.commandKey, propertiesStrategy, commandPropertiesDefaults);
-        // 线程池的名称，默认使用commandGroup
+        // 线程池的名称，如果threadPoolKey为空，则使用commandGroup
         this.threadPoolKey = initThreadPoolKey(threadPoolKey, this.commandGroup, this.properties.executionIsolationThreadPoolKeyOverride().get());
 
         this.metrics = initMetrics(metrics, this.commandGroup, this.threadPoolKey, this.commandKey, this.properties);
+
         this.circuitBreaker = initCircuitBreaker(this.properties.circuitBreakerEnabled().get(), circuitBreaker, this.commandGroup, this.commandKey, this.properties, this.metrics);
 
-        // 构建线程池
+        // 根据 threadPoolKey 获取和构建线程池
         this.threadPool = initThreadPool(threadPool, this.threadPoolKey, threadPoolPropertiesDefaults);
 
         //Strategies from plugins
         this.eventNotifier = HystrixPlugins.getInstance().getEventNotifier();
+
         this.concurrencyStrategy = HystrixPlugins.getInstance().getConcurrencyStrategy();
         HystrixMetricsPublisherFactory.createOrRetrievePublisherForCommand(this.commandKey, this.commandGroup, this.metrics, this.circuitBreaker, this.properties);
         this.executionHook = initExecutionHook(executionHook);
@@ -202,6 +204,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
     private static HystrixCommandKey initCommandKey(final HystrixCommandKey fromConstructor, Class<?> clazz) {
         if (fromConstructor == null || fromConstructor.name().trim().equals("")) {
+            // 默认使用当前类的名称
             final String keyName = getDefaultNameFromClass(clazz);
             return HystrixCommandKey.Factory.asKey(keyName);
         } else {
@@ -280,6 +283,13 @@ import java.util.concurrent.atomic.AtomicReference;
         }
     }
 
+    /**
+     * 初始化hystrix线程池
+     * @param fromConstructor
+     * @param threadPoolKey
+     * @param threadPoolPropertiesDefaults
+     * @return
+     */
     private static HystrixThreadPool initThreadPool(HystrixThreadPool fromConstructor, HystrixThreadPoolKey threadPoolKey, HystrixThreadPoolProperties.Setter threadPoolPropertiesDefaults) {
         if (fromConstructor == null) {
             // get the default implementation of HystrixThreadPool
@@ -493,6 +503,7 @@ import java.util.concurrent.atomic.AtomicReference;
                     }
                 }
 
+                // 创建Observable对象，并对每个元素进行map转换处理
                 Observable<R> hystrixObservable =
                         Observable.defer(applyHystrixSemantics)
                                 .map(wrapWithAllOnNextHooks);
@@ -525,12 +536,18 @@ import java.util.concurrent.atomic.AtomicReference;
         });
     }
 
+    /**
+     * 根据hystrix命令创建Observable对象
+     * @param _cmd
+     * @return
+     */
     private Observable<R> applyHystrixSemantics(final AbstractCommand<R> _cmd) {
         // mark that we're starting execution on the ExecutionHook
         // if this hook throws an exception, then a fast-fail occurs with no fallback.  No state is left inconsistent
         executionHook.onStart(_cmd);
 
         /* determine if we're allowed to execute */
+        // todo 断路器-尝试执行
         if (circuitBreaker.attemptExecution()) {
             final TryableSemaphore executionSemaphore = getExecutionSemaphore();
             final AtomicBoolean semaphoreHasBeenReleased = new AtomicBoolean(false);
@@ -550,6 +567,7 @@ import java.util.concurrent.atomic.AtomicReference;
                 }
             };
 
+            // todo 信号量-获取信号量
             if (executionSemaphore.tryAcquire()) {
                 try {
                     /* used to track userThreadExecutionTime */
@@ -591,6 +609,7 @@ import java.util.concurrent.atomic.AtomicReference;
                     eventNotifier.markEvent(HystrixEventType.SUCCESS, commandKey);
                     executionResult = executionResult.addEvent((int) latency, HystrixEventType.SUCCESS);
                     eventNotifier.markCommandExecution(getCommandKey(), properties.executionIsolationStrategy().get(), (int) latency, executionResult.getOrderedList());
+                    // todo 断路器-执行成功
                     circuitBreaker.markSuccess();
                 }
             }
@@ -604,6 +623,7 @@ import java.util.concurrent.atomic.AtomicReference;
                     eventNotifier.markEvent(HystrixEventType.SUCCESS, commandKey);
                     executionResult = executionResult.addEvent((int) latency, HystrixEventType.SUCCESS);
                     eventNotifier.markCommandExecution(getCommandKey(), properties.executionIsolationStrategy().get(), (int) latency, executionResult.getOrderedList());
+                    // todo 断路器-执行成功
                     circuitBreaker.markSuccess();
                 }
             }
@@ -612,6 +632,7 @@ import java.util.concurrent.atomic.AtomicReference;
         final Func1<Throwable, Observable<R>> handleFallback = new Func1<Throwable, Observable<R>>() {
             @Override
             public Observable<R> call(Throwable t) {
+                //todo 断路器-执行失败
                 circuitBreaker.markNonSuccess();
                 Exception e = getExceptionFromThrowable(t);
                 executionResult = executionResult.setExecutionException(e);
@@ -656,6 +677,11 @@ import java.util.concurrent.atomic.AtomicReference;
                 .doOnEach(setRequestContext);
     }
 
+    /**
+     * 命令执行不同的隔离策略
+     * @param _cmd
+     * @return
+     */
     private Observable<R> executeCommandWithSpecifiedIsolation(final AbstractCommand<R> _cmd) {
         if (properties.executionIsolationStrategy().get() == ExecutionIsolationStrategy.THREAD) {
             // mark that we are executing in a thread (even if we end up being rejected we still were a THREAD execution and not SEMAPHORE)
@@ -720,6 +746,7 @@ import java.util.concurrent.atomic.AtomicReference;
                     //if it was terminal, then other cleanup handled it
                 }
             }).subscribeOn(threadPool.getScheduler(new Func0<Boolean>() {
+                // todo 发布任务执行的线程池
                 @Override
                 public Boolean call() {
                     return properties.executionIsolationThreadInterruptOnTimeout().get() && _cmd.isCommandTimedOut.get() == TimedOutStatus.TIMED_OUT;
@@ -1280,6 +1307,7 @@ import java.util.concurrent.atomic.AtomicReference;
             }
         } else {
             // return NoOp implementation since we're not using SEMAPHORE isolation
+            // todo 信号量-禁用时，默认使用的没有限制的断路器
             return TryableSemaphoreNoOp.DEFAULT;
         }
     }

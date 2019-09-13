@@ -15,13 +15,6 @@
  */
 package com.netflix.hystrix.strategy;
 
-import java.util.ServiceConfigurationError;
-import java.util.ServiceLoader;
-import java.util.concurrent.atomic.AtomicReference;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.netflix.hystrix.strategy.concurrency.HystrixConcurrencyStrategy;
 import com.netflix.hystrix.strategy.concurrency.HystrixConcurrencyStrategyDefault;
 import com.netflix.hystrix.strategy.eventnotifier.HystrixEventNotifier;
@@ -35,6 +28,12 @@ import com.netflix.hystrix.strategy.properties.HystrixDynamicProperties;
 import com.netflix.hystrix.strategy.properties.HystrixDynamicPropertiesSystemProperties;
 import com.netflix.hystrix.strategy.properties.HystrixPropertiesStrategy;
 import com.netflix.hystrix.strategy.properties.HystrixPropertiesStrategyDefault;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.ServiceConfigurationError;
+import java.util.ServiceLoader;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Registry for plugin implementations that allows global override and handles the retrieval of correct implementation based on order of precedence:
@@ -342,6 +341,9 @@ public class HystrixPlugins {
         // Check Archaius for plugin class.
         String propertyName = "hystrix.plugin." + classSimpleName + ".implementation";
         String implementingClass = dynamicProperties.getString(propertyName, null).get();
+
+        System.out.println( "获取类 " + propertyName +" 的实现类: "+ implementingClass );
+
         if (implementingClass != null) {
             try {
                 Class<?> cls = Class.forName(implementingClass);

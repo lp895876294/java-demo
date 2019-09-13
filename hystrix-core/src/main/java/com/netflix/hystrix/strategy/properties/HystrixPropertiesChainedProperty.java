@@ -106,6 +106,7 @@ public abstract class HystrixPropertiesChainedProperty {
             if (pReference.get() == this) {
                 return this.getValue();
             } else {
+                // 级联获取
                 return pReference.get().get();
             }
         }
@@ -163,7 +164,7 @@ public abstract class HystrixPropertiesChainedProperty {
                     current = new ChainProperty<T>(p, current);
                 }
             }
-            
+            // 返回链式调用属性
             return new ChainHystrixProperty<T>(current);
             
         }

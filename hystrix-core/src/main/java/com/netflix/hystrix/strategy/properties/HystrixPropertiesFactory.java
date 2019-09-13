@@ -15,17 +15,10 @@
  */
 package com.netflix.hystrix.strategy.properties;
 
-import java.util.concurrent.ConcurrentHashMap;
-
-import com.netflix.hystrix.HystrixCollapserKey;
-import com.netflix.hystrix.HystrixCollapserProperties;
-import com.netflix.hystrix.HystrixCommand;
-import com.netflix.hystrix.HystrixCommandKey;
-import com.netflix.hystrix.HystrixCommandProperties;
-import com.netflix.hystrix.HystrixThreadPool;
-import com.netflix.hystrix.HystrixThreadPoolKey;
-import com.netflix.hystrix.HystrixThreadPoolProperties;
+import com.netflix.hystrix.*;
 import com.netflix.hystrix.strategy.HystrixPlugins;
+
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Factory for retrieving properties implementations.
@@ -60,7 +53,9 @@ public class HystrixPropertiesFactory {
      */
     public static HystrixCommandProperties getCommandProperties(HystrixCommandKey key, HystrixCommandProperties.Setter builder) {
         HystrixPropertiesStrategy hystrixPropertiesStrategy = HystrixPlugins.getInstance().getPropertiesStrategy();
+        // 根据hystrix的属性配置key
         String cacheKey = hystrixPropertiesStrategy.getCommandPropertiesCacheKey(key, builder);
+        // 获取指定key的hystrix配置
         if (cacheKey != null) {
             HystrixCommandProperties properties = commandProperties.get(cacheKey);
             if (properties != null) {

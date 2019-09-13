@@ -15,20 +15,16 @@
  */
 package com.netflix.hystrix.examples.basic;
 
-import static org.junit.Assert.*;
-
-import java.io.IOException;
-import java.util.concurrent.Future;
-
-import org.junit.Test;
-
-import rx.Observable;
-import rx.Observer;
-import rx.Subscriber;
-import rx.functions.Action1;
-
 import com.netflix.hystrix.HystrixCommand;
 import com.netflix.hystrix.HystrixCommandGroupKey;
+import org.junit.Test;
+import rx.Observable;
+import rx.Observer;
+import rx.functions.Action1;
+
+import java.util.concurrent.Future;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * The obligatory "Hello World!" showing a simple implementation of a {@link HystrixCommand}.
@@ -75,9 +71,7 @@ public class CommandHelloWorld extends HystrixCommand<String> {
 //                    System.out.println( "onNext1->" + s);
 //                }
 //            }) ;
-
-            System.in.read() ;
-
+//            System.in.read() ;
 //            commandHelloWorld.execute() ;
 //            System.out.println( commandHelloWorld.execute() );
         }

@@ -109,7 +109,7 @@ public interface HystrixThreadPool {
                 return previouslyCached;
             }
 
-            // if we get here this is the first time so we need to initialize
+            // 同步锁定 HystrixThreadPool.class的 锁对象监视器
             synchronized (HystrixThreadPool.class) {
                 if (!threadPools.containsKey(key)) {
                     threadPools.put(key, new HystrixThreadPoolDefault(threadPoolKey, propertiesBuilder));
@@ -178,8 +178,9 @@ public interface HystrixThreadPool {
             this.metrics = HystrixThreadPoolMetrics.getInstance(threadPoolKey,
                     concurrencyStrategy.getThreadPool(threadPoolKey, properties),
                     properties);
-
+            // 创建线程池
             this.threadPool = this.metrics.getThreadPool();
+            // 获取阻塞队列大小
             this.queue = this.threadPool.getQueue();
 
             /* strategy: HystrixMetricsPublisherThreadPool */
@@ -269,6 +270,7 @@ public interface HystrixThreadPool {
                 // let the thread-pool reject or not
                 return true;
             } else {
+                // 最多有5个任务可以等待
                 return threadPool.getQueue().size() < properties.queueSizeRejectionThreshold().get();
             }
         }

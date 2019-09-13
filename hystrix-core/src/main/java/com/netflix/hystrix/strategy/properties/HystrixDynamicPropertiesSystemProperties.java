@@ -31,6 +31,7 @@ public final class HystrixDynamicPropertiesSystemProperties implements HystrixDy
             
             @Override
             public Integer get() {
+                // 根据 System.getProperty 获取配置属性
                 return Integer.getInteger(name, fallback);
             }
             @Override
@@ -70,6 +71,7 @@ public final class HystrixDynamicPropertiesSystemProperties implements HystrixDy
             
             @Override
             public Long get() {
+                // 根据 System.getProperty 获取配置属性
                 return Long.getLong(name, fallback);
             }
             
@@ -89,6 +91,7 @@ public final class HystrixDynamicPropertiesSystemProperties implements HystrixDy
             }
             @Override
             public Boolean get() {
+                // 根据 System.getProperty 获取配置属性
                 if (System.getProperty(name) == null) {
                     return fallback;
                 }
