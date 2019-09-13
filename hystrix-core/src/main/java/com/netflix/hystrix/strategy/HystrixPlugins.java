@@ -334,7 +334,8 @@ public class HystrixPlugins {
         if (p != null) return p;        
         return findService(pluginClass, classLoader);
     }
-    
+
+    // todo 插件加载 - 获取hystrix插件的具体实现类
     @SuppressWarnings("unchecked")
     private static <T> T getPluginImplementationViaProperties(Class<T> pluginClass, HystrixDynamicProperties dynamicProperties) {
         String classSimpleName = pluginClass.getSimpleName();

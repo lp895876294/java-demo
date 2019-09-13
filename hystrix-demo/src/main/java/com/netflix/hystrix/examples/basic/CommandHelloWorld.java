@@ -20,6 +20,7 @@ import com.netflix.hystrix.HystrixCommandGroupKey;
 import org.junit.Test;
 import rx.Observable;
 import rx.Observer;
+import rx.Subscriber;
 import rx.functions.Action1;
 
 import java.util.concurrent.Future;
@@ -49,29 +50,32 @@ public class CommandHelloWorld extends HystrixCommand<String> {
         public void testSynchronous() throws Exception {
             CommandHelloWorld commandHelloWorld = new CommandHelloWorld("World") ;
 
-            commandHelloWorld.execute() ;
+//            commandHelloWorld.execute() ;
 
             Observable<String> observable = commandHelloWorld.toObservable() ;
 
-            System.out.println( observable.toBlocking().toFuture().get() ) ;
+//            System.out.println( observable.toBlocking().toFuture().get() ) ;
 
-//            observable.subscribe(new Subscriber<String>() {
-//                @Override
-//                public void onCompleted() {
-//                    System.out.println( "complete1" );
-//                }
-//
-//                @Override
-//                public void onError(Throwable e) {
-//                    System.out.println( "onError1" );
-//                }
-//
-//                @Override
-//                public void onNext(String s) {
-//                    System.out.println( "onNext1->" + s);
-//                }
-//            }) ;
-//            System.in.read() ;
+            observable.subscribe(new Subscriber<String>() {
+                @Override
+                public void onCompleted() {
+                    System.out.println( "complete1" );
+                }
+
+                @Override
+                public void onError(Throwable e) {
+                    System.out.println( "onError1" );
+                }
+
+                @Override
+                public void onNext(String s) {
+                    System.out.println( Thread.currentThread().getName() + " , onNext1->" + s);
+                }
+            }) ;
+
+            System.out.println(Thread.currentThread().getName() + " , main wait");
+
+            System.in.read() ;
 //            commandHelloWorld.execute() ;
 //            System.out.println( commandHelloWorld.execute() );
         }

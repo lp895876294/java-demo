@@ -398,6 +398,7 @@ import java.util.concurrent.atomic.AtomicReference;
             }
         };
 
+        //todo cmd - 标准命令取消
         //mark the command as CANCELLED and store the latency (in addition to standard cleanup)
         final Action0 unsubscribeCommandCleanup = new Action0() {
             @Override
@@ -431,6 +432,7 @@ import java.util.concurrent.atomic.AtomicReference;
             }
         };
 
+        // todo cmd - 执行hystrix命令
         final Func0<Observable<R>> applyHystrixSemantics = new Func0<Observable<R>>() {
             @Override
             public Observable<R> call() {
@@ -491,6 +493,7 @@ import java.util.concurrent.atomic.AtomicReference;
                     }
                 }
 
+                //todo cmd - 不允许开启请求缓存
                 final boolean requestCacheEnabled = isRequestCachingEnabled();
                 final String cacheKey = getCacheKey();
 
@@ -544,6 +547,7 @@ import java.util.concurrent.atomic.AtomicReference;
     private Observable<R> applyHystrixSemantics(final AbstractCommand<R> _cmd) {
         // mark that we're starting execution on the ExecutionHook
         // if this hook throws an exception, then a fast-fail occurs with no fallback.  No state is left inconsistent
+        // todo cmd - 开始命令
         executionHook.onStart(_cmd);
 
         /* determine if we're allowed to execute */
@@ -567,7 +571,7 @@ import java.util.concurrent.atomic.AtomicReference;
                 }
             };
 
-            // todo 信号量-获取信号量
+            // todo cmd - 信号量-获取信号量
             if (executionSemaphore.tryAcquire()) {
                 try {
                     /* used to track userThreadExecutionTime */
@@ -714,6 +718,7 @@ import java.util.concurrent.atomic.AtomicReference;
                             executionHook.onThreadStart(_cmd);
                             executionHook.onRunStart(_cmd);
                             executionHook.onExecutionStart(_cmd);
+                            //todo cmd - 获取用户执行的线程任务
                             return getUserExecutionObservable(_cmd);
                         } catch (Throwable ex) {
                             return Observable.error(ex);
@@ -746,7 +751,7 @@ import java.util.concurrent.atomic.AtomicReference;
                     //if it was terminal, then other cleanup handled it
                 }
             }).subscribeOn(threadPool.getScheduler(new Func0<Boolean>() {
-                // todo 发布任务执行的线程池
+                // todo cmd - 发布任务执行的线程池
                 @Override
                 public Boolean call() {
                     return properties.executionIsolationThreadInterruptOnTimeout().get() && _cmd.isCommandTimedOut.get() == TimedOutStatus.TIMED_OUT;
@@ -922,6 +927,7 @@ import java.util.concurrent.atomic.AtomicReference;
         Observable<R> userObservable;
 
         try {
+            //todo cmd - 设置行的线程任务
             userObservable = getExecutionObservable();
         } catch (Throwable ex) {
             // the run() method is a user provided implementation so can throw instead of using Observable.onError

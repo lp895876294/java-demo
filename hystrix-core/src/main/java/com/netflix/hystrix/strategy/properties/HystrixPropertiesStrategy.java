@@ -28,6 +28,7 @@ import com.netflix.hystrix.HystrixTimerThreadPoolProperties;
 import com.netflix.hystrix.strategy.HystrixPlugins;
 
 /**
+ * todo - 配置加载策略 ，分别获取命令配置、线程池配置、聚合配置、时间窗口配置
  * Abstract class with default implementations of factory methods for properties used by various components of Hystrix.
  * <p>
  * See {@link HystrixPlugins} or the Hystrix GitHub Wiki for information on configuring plugins: <a

@@ -43,6 +43,7 @@ public class HystrixPropertiesFactory {
     private static final ConcurrentHashMap<String, HystrixCommandProperties> commandProperties = new ConcurrentHashMap<String, HystrixCommandProperties>();
 
     /**
+     * todo 配置 - 命令配置
      * Get an instance of {@link HystrixCommandProperties} with the given factory {@link HystrixPropertiesStrategy} implementation for each {@link HystrixCommand} instance.
      * 
      * @param key
@@ -84,6 +85,7 @@ public class HystrixPropertiesFactory {
     private static final ConcurrentHashMap<String, HystrixThreadPoolProperties> threadPoolProperties = new ConcurrentHashMap<String, HystrixThreadPoolProperties>();
 
     /**
+     * todo 配置 - 线程池配置
      * Get an instance of {@link HystrixThreadPoolProperties} with the given factory {@link HystrixPropertiesStrategy} implementation for each {@link HystrixThreadPool} instance.
      * 
      * @param key
