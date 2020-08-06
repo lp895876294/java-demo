@@ -28,13 +28,15 @@
         <module>feign-client-sdk-impl</module>
         <module>hystrix-demo</module>
         <module>hystrix-core</module>
+        <module>ss-server</module>
+        <module>ss-client</module>
     </modules>
 
     <repositories>
         <repository>
             <id>nexus</id>
             <name>nexus repository</name>
-            <url>http://maven.fosung.com/nexus/content/groups/jar-all/</url>
+            <url>http://nexus.fosung.com:8081/nexus/content/groups/jar-all/</url>
             <snapshots>
                 <enabled>true</enabled>
                 <updatePolicy>always</updatePolicy>
@@ -45,19 +47,19 @@
         <pluginRepository>
             <id>nexus</id>
             <name>Team Nexus Repository</name>
-            <url>http://maven.fosung.com/nexus/content/groups/jar-all/</url>
+            <url>http://nexus.fosung.com:8081/nexus/content/groups/jar-all/</url>
         </pluginRepository>
     </pluginRepositories>
     <distributionManagement>
         <repository>
             <id>releases</id>
             <name>Nexus Release Repository</name>
-            <url>http://maven.fosung.com/nexus/content/repositories/releases/</url>
+            <url>http://nexus.fosung.com:8081/nexus/content/repositories/releases/</url>
         </repository>
         <snapshotRepository>
             <id>snapshot</id>
             <name>Nexus snapshot Repository</name>
-            <url>http://maven.fosung.com/nexus/content/repositories/snapshots/</url>
+            <url>http://nexus.fosung.com:8081/nexus/content/repositories/snapshots/</url>
         </snapshotRepository>
     </distributionManagement>
 
